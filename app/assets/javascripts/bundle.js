@@ -47,18 +47,15 @@
 	var React = __webpack_require__(1),
 	    ReactDOM = __webpack_require__(158),
 	    BenchStore = __webpack_require__(159),
-	    apiUtil = __webpack_require__(180);
+	    apiUtil = __webpack_require__(180),
+	    Index = __webpack_require__(184);
 
-	window.BenchStore = BenchStore;
-	window.apiUtil = apiUtil;
+	// window.BenchStore = BenchStore;
+	// window.apiUtil = apiUtil;
 
 	window.addEventListener('DOMContentLoaded', function () {
 	    var root = document.getElementById('content');
-	    ReactDOM.render(React.createElement(
-	        'div',
-	        null,
-	        'Hello'
-	    ), root);
+	    ReactDOM.render(React.createElement(Index, null), root);
 	});
 
 /***/ },
@@ -19665,14 +19662,14 @@
 	BenchStore.__onDispatch = function (payload) {
 	  switch (payload.actionType) {
 	    case BenchConstants.BENCHES_RECEIVED:
-	      var result = resetBenches(payload.benches);
-	      BenchStore.__emitChange();
+	      this._resetBenches(payload.benches);
 	      break;
 	  }
 	};
 
-	var resetBenches = function (benches) {
+	BenchStore._resetBenches = function (benches) {
 	  _benches = benches;
+	  this.__emitChange();
 	};
 
 	module.exports = BenchStore;
@@ -26408,6 +26405,47 @@
 	};
 
 	module.exports = BenchConstants;
+
+/***/ },
+/* 184 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1),
+	    BenchStore = __webpack_require__(159),
+	    apiUtil = __webpack_require__(180);
+
+	var Index = React.createClass({
+	  displayName: 'Index',
+
+	  getInitialState: function () {
+	    return { benches: BenchStore.all() };
+	  },
+	  _onChange: function () {
+	    this.setState({ benches: BenchStore.all() });
+	  },
+	  componentDidMount: function () {
+	    this.benchToken = BenchStore.addListener(this._onChange);
+	    apiUtil.fetchBenches();
+	  },
+	  componentWillUnmount: function () {
+	    this.benchToken.remove();
+	  },
+	  render: function () {
+	    return React.createElement(
+	      'div',
+	      null,
+	      this.state.benches.map(function (bench, i) {
+	        return React.createElement(
+	          'li',
+	          { key: i },
+	          bench.description
+	        );
+	      })
+	    );
+	  }
+	});
+
+	module.exports = Index;
 
 /***/ }
 /******/ ]);
