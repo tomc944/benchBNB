@@ -47,15 +47,15 @@
 	var React = __webpack_require__(1),
 	    ReactDOM = __webpack_require__(158),
 	    BenchStore = __webpack_require__(159),
-	    apiUtil = __webpack_require__(180),
-	    Index = __webpack_require__(184);
+	    apiUtil = __webpack_require__(181),
+	    Search = __webpack_require__(183);
 
 	// window.BenchStore = BenchStore;
 	// window.apiUtil = apiUtil;
 
 	window.addEventListener('DOMContentLoaded', function () {
 	    var root = document.getElementById('content');
-	    ReactDOM.render(React.createElement(Index, null), root);
+	    ReactDOM.render(React.createElement(Search, null), root);
 	});
 
 /***/ },
@@ -19651,7 +19651,7 @@
 
 	var Store = __webpack_require__(160).Store,
 	    AppDispatcher = __webpack_require__(177),
-	    BenchConstants = __webpack_require__(183),
+	    BenchConstants = __webpack_require__(180),
 	    _benches = [],
 	    BenchStore = new Store(AppDispatcher);
 
@@ -26358,6 +26358,16 @@
 
 /***/ },
 /* 180 */
+/***/ function(module, exports) {
+
+	var BenchConstants = {
+	  BENCHES_RECEIVED: "BENCHES_RECEIVED"
+	};
+
+	module.exports = BenchConstants;
+
+/***/ },
+/* 181 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var ApiActions = __webpack_require__(182);
@@ -26378,12 +26388,11 @@
 	module.exports = apiUtil;
 
 /***/ },
-/* 181 */,
 /* 182 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var AppDispatcher = __webpack_require__(177);
-	var BenchConstants = __webpack_require__(183);
+	var BenchConstants = __webpack_require__(180);
 
 	var ApiActions = {
 	  receiveAll: function (benches) {
@@ -26398,21 +26407,58 @@
 
 /***/ },
 /* 183 */
-/***/ function(module, exports) {
+/***/ function(module, exports, __webpack_require__) {
 
-	var BenchConstants = {
-	  BENCHES_RECEIVED: "BENCHES_RECEIVED"
-	};
+	var React = __webpack_require__(1),
+	    Map = __webpack_require__(184),
+	    Index = __webpack_require__(185);
 
-	module.exports = BenchConstants;
+	var Search = React.createClass({
+	  displayName: 'Search',
+
+	  render: function () {
+	    return React.createElement(
+	      'div',
+	      null,
+	      React.createElement(Map, null),
+	      React.createElement(Index, null)
+	    );
+	  }
+	});
+
+	module.exports = Search;
 
 /***/ },
 /* 184 */
 /***/ function(module, exports, __webpack_require__) {
 
+	var React = __webpack_require__(1);
+
+	var Map = React.createClass({
+	  displayName: "Map",
+
+	  componentDidMount: function () {
+	    var map = React.findDOMNode(this.refs.map);
+	    var mapOptions = {
+	      center: { lat: 37.7758, lng: -122.435 },
+	      zoom: 13
+	    };
+	    this.map = new google.maps.Map(map, mapOptions);
+	  },
+	  render: function () {
+	    return React.createElement("div", { className: "map", ref: "map" });
+	  }
+	});
+
+	module.exports = Map;
+
+/***/ },
+/* 185 */
+/***/ function(module, exports, __webpack_require__) {
+
 	var React = __webpack_require__(1),
 	    BenchStore = __webpack_require__(159),
-	    apiUtil = __webpack_require__(180);
+	    apiUtil = __webpack_require__(181);
 
 	var Index = React.createClass({
 	  displayName: 'Index',
