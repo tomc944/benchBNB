@@ -1,0 +1,2 @@
+module BenchsHelper
+end
