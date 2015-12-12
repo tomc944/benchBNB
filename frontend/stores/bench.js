@@ -19,7 +19,6 @@ BenchStore.__onDispatch = function(payload){
 BenchStore._resetBenches = function(benches){
   _benches = benches;
   this.__emitChange();
-
 }
 
 module.exports = BenchStore
