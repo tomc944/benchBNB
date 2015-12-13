@@ -26433,13 +26433,27 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1),
+	    apiUtil = __webpack_require__(181),
 	    BenchStore = __webpack_require__(159);
 
 	var Map = React.createClass({
 	  displayName: 'Map',
 
 	  getInitialState: function () {
-	    return { markers: [] };
+	    return { markers: BenchStore.all() };
+	  },
+	  _onChange: function () {
+	    this.setState({ markers: BenchStore.all() });
+	    this._placeMarkers();
+	  },
+	  _placeMarkers: function () {
+	    var that = this;
+	    this.state.markers.map(function (marker) {
+	      marker = new google.maps.Marker({
+	        position: { lat: marker.lat, lng: marker.lng }
+	      });
+	      return marker.setMap(that.map);
+	    });
 	  },
 	  componentDidMount: function () {
 	    var map = React.findDOMNode(this.refs.map);
@@ -26449,12 +26463,7 @@
 	    };
 	    this.map = new google.maps.Map(map, mapOptions);
 	    this.token = BenchStore.addListener(this._onChange);
-	  },
-	  _onChange: function () {
-	    marker = new google.maps.Marker({
-	      position: { lat: 37.780913, lng: -122.411366 }
-	    });
-	    marker.setMap(this.map);
+	    apiUtil.fetchBenches();
 	  },
 	  componentWillUnmount: function () {
 	    this.token.remove();
