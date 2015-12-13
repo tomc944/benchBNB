@@ -33,8 +33,15 @@ var Map = React.createClass({
     var that = this;
     google.maps.event.addListener(this.map, 'idle', function() {
       var bounds = that.map.getBounds();
+      var northEast = bounds.getNorthEast();
+      var southWest = bounds.getSouthWest();
+      that.newBounds = {"northEast":
+                      {"lat": northEast.lat(), "lng": northEast.lng()},
+                       "southWest":
+                      {"lat": southWest.lat(), "lng": southWest.lng()}}
+      // debugger;
+      apiUtil.fetchBenches(that.newBounds);
     });
-    apiUtil.fetchBenches();
   },
   componentWillUnmount: function() {
     this.token.remove();

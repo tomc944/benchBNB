@@ -26373,10 +26373,12 @@
 	var ApiActions = __webpack_require__(182);
 
 	var apiUtil = {
-	  fetchBenches: function () {
+	  fetchBenches: function (bounds) {
+	    // debugger;
 	    $.ajax({
 	      method: 'GET',
 	      url: 'api/benches',
+	      data: { bounds: bounds },
 	      dataType: 'json',
 	      success: function (resp) {
 	        ApiActions.receiveAll(resp);
@@ -26469,8 +26471,13 @@
 	    var that = this;
 	    google.maps.event.addListener(this.map, 'idle', function () {
 	      var bounds = that.map.getBounds();
+	      var northEast = bounds.getNorthEast();
+	      var southWest = bounds.getSouthWest();
+	      that.newBounds = { "northEast": { "lat": northEast.lat(), "lng": northEast.lng() },
+	        "southWest": { "lat": southWest.lat(), "lng": southWest.lng() } };
+	      // debugger;
+	      apiUtil.fetchBenches(that.newBounds);
 	    });
-	    apiUtil.fetchBenches();
 	  },
 	  componentWillUnmount: function () {
 	    this.token.remove();
