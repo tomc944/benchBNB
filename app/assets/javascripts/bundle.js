@@ -26463,6 +26463,13 @@
 	    };
 	    this.map = new google.maps.Map(map, mapOptions);
 	    this.token = BenchStore.addListener(this._onChange);
+	    this.listenForMove();
+	  },
+	  listenForMove: function () {
+	    var that = this;
+	    google.maps.event.addListener(this.map, 'idle', function () {
+	      var bounds = that.map.getBounds();
+	    });
 	    apiUtil.fetchBenches();
 	  },
 	  componentWillUnmount: function () {
@@ -26494,7 +26501,6 @@
 	  },
 	  componentDidMount: function () {
 	    this.benchToken = BenchStore.addListener(this._onChange);
-	    apiUtil.fetchBenches();
 	  },
 	  componentWillUnmount: function () {
 	    this.benchToken.remove();
