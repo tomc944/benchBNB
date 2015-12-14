@@ -19687,11 +19687,14 @@
 	var Search = React.createClass({
 	  displayName: 'Search',
 
+	  clickMapHandler: function (query) {
+	    this.props.history.pushState(null, '/benches/new', query);
+	  },
 	  render: function () {
 	    return React.createElement(
 	      'div',
 	      null,
-	      React.createElement(Map, null),
+	      React.createElement(Map, { handler: this.clickMapHandler }),
 	      React.createElement(Index, null)
 	    );
 	  }
@@ -19736,6 +19739,7 @@
 	    this.map = new google.maps.Map(map, mapOptions);
 	    this.token = BenchStore.addListener(this._onChange);
 	    this.listenForMove();
+	    this.listenForClick();
 	  },
 	  listenForMove: function () {
 	    var that = this;
@@ -19747,6 +19751,15 @@
 	        "southWest": { "lat": southWest.lat(), "lng": southWest.lng() } };
 	      apiUtil.fetchBenches(that.newBounds);
 	    });
+	  },
+	  listenForClick: function () {
+	    this.map.addListener('click', (function (e) {
+	      debugger;
+	      this.props.handler({
+	        "lat": e.latLng.lat(),
+	        "lng": e.latLng.lng()
+	      });
+	    }).bind(this));
 	  },
 	  componentWillUnmount: function () {
 	    this.token.remove();
@@ -26609,6 +26622,14 @@
 	    return this.blankAttrs;
 	  },
 
+	  componentDidMount: function () {
+	    var query = this.props.location.query;
+	    debugger;
+	    if (query) {
+	      this.setState({ "lat": query.lat, "lng": query.lng });
+	    }
+	  },
+
 	  createBench: function (event) {
 	    event.preventDefault();
 	    var bench = [{}];
@@ -26622,6 +26643,7 @@
 	  },
 
 	  render: function () {
+	    debugger;
 	    return React.createElement(
 	      'form',
 	      { onSubmit: this.createBench },
