@@ -5,6 +5,7 @@ class CreateBenches < ActiveRecord::Migration
       t.float :lat, null: false
       t.float :lng, null: false
       t.timestamps null: false
+      t.integer :seating
     end
   end
 end

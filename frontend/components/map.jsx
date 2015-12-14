@@ -12,6 +12,7 @@ var Map = React.createClass({
   },
   _placeMarkers: function() {
     var that = this;
+    // debugger;
     this.state.markers.map(function(marker) {
       marker = new google.maps.Marker({
         position: { lat: marker.lat, lng: marker.lng }
@@ -39,7 +40,6 @@ var Map = React.createClass({
                       {"lat": northEast.lat(), "lng": northEast.lng()},
                        "southWest":
                       {"lat": southWest.lat(), "lng": southWest.lng()}}
-      // debugger;
       apiUtil.fetchBenches(that.newBounds);
     });
   },

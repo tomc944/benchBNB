@@ -19,6 +19,7 @@ ActiveRecord::Schema.define(version: 20151211194511) do
     t.float    "lng",         null: false
     t.datetime "created_at",  null: false
     t.datetime "updated_at",  null: false
+    t.integer  "seating"
   end
 
 end

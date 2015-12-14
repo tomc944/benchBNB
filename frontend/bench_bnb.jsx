@@ -3,7 +3,8 @@ var React = require('react'),
     Search = require('./components/search'),
     Router = require('react-router').Router,
     Route = require('react-router').Route,
-    IndexRoute = require('react-router').IndexRoute;
+    IndexRoute = require('react-router').IndexRoute,
+    BenchForm = require('./components/form');
 
 var App = React.createClass({
   render: function() {
@@ -19,12 +20,9 @@ var App = React.createClass({
 var routes = (
   <Route path = "/" component={App}>
     <IndexRoute component={Search} />
+    <Route path="benches/new" component={BenchForm} />
   </Route>
 )
-
-
-// window.BenchStore = BenchStore;
-// window.apiUtil = apiUtil;
 
 window.addEventListener('DOMContentLoaded', function() {
   var root = document.getElementById('content');
