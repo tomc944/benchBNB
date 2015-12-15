@@ -12,7 +12,7 @@ var Map = React.createClass({
   },
   _placeMarkers: function() {
     var that = this;
-    // debugger;
+    
     this.state.markers.map(function(marker) {
       marker = new google.maps.Marker({
         position: { lat: marker.lat, lng: marker.lng }
@@ -46,7 +46,6 @@ var Map = React.createClass({
   },
   listenForClick: function() {
     this.map.addListener('click', function(e) {
-      debugger;
       this.props.handler({
         "lat": e.latLng.lat(),
         "lng": e.latLng.lng()

@@ -1,11 +1,12 @@
-var ApiActions = require("../actions/api_actions.js")
+var ApiActions = require("../actions/api_actions.js"),
+    FilterActions = require("../actions/filter_actions");
 
 var apiUtil = {
   fetchBenches: function(bounds){
     $.ajax({
        method: 'GET',
        url: 'api/benches',
-       data: {bounds: bounds},
+       data: {params: bounds},
        dataType: 'json',
        success: function(resp) {
          ApiActions.receiveAll(resp);
@@ -23,6 +24,7 @@ var apiUtil = {
       }
     })
   }
+
 };
 
 module.exports = apiUtil;

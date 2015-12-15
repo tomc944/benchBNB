@@ -2,7 +2,11 @@ require 'byebug'
 
 class Api::BenchesController < ApplicationController
   def index
-    @benches = Bench.in_bounds(params[:bounds])
+    if (params[:params])
+      @benches = Bench.in_bounds(params[:params])
+    else
+      @benches = []
+    end
   end
 
   def create

@@ -19,9 +19,8 @@ var BenchForm = React.createClass({
 
   componentDidMount: function() {
     var query = this.props.location.query;
-    debugger;
     if (query) {
-      this.setState({"lat": query.lat, "lng": query.lng})
+      this.setState({ "lat": query.lat, "lng": query.lng })
     }
   },
 
@@ -35,10 +34,10 @@ var BenchForm = React.createClass({
       this.history.pushState(null, "/bench/" + id, {});
     }.bind(this));
     this.setState(this.blankAttrs);
+    this.props.history.pushState(null, '/', {});
   },
 
   render: function() {
-    debugger;
     return(
       <form onSubmit={this.createBench}>
         <div>

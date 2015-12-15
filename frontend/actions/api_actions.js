@@ -1,5 +1,5 @@
-var AppDispatcher = require('../dispatcher/dispatcher');
-var BenchConstants = require('../constants/bench_constants');
+var AppDispatcher = require('../dispatcher/dispatcher'),
+    BenchConstants = require('../constants/bench_constants');
 
 var ApiActions = {
   receiveAll: function(benches){

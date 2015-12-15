@@ -19682,13 +19682,25 @@
 
 	var React = __webpack_require__(1),
 	    Map = __webpack_require__(160),
-	    Index = __webpack_require__(185);
+	    Index = __webpack_require__(185),
+	    FilterStore = __webpack_require__(242),
+	    ApiUtil = __webpack_require__(161);
 
 	var Search = React.createClass({
 	  displayName: 'Search',
 
+	  getInitialState: function () {
+	    return { params: FilterStore.all() };
+	  },
+	  _onChange: function () {
+	    this.setState({ params: FilterStore.all() });
+	  },
 	  clickMapHandler: function (query) {
 	    this.props.history.pushState(null, '/benches/new', query);
+	  },
+	  componentDidMount: function () {
+	    this.filterListener = FilterStore.addListener(this._onChange);
+	    ApiUtil.fetchBenches(this.state.params);
 	  },
 	  render: function () {
 	    return React.createElement(
@@ -19722,7 +19734,7 @@
 	  },
 	  _placeMarkers: function () {
 	    var that = this;
-	    // debugger;
+
 	    this.state.markers.map(function (marker) {
 	      marker = new google.maps.Marker({
 	        position: { lat: marker.lat, lng: marker.lng }
@@ -19754,7 +19766,6 @@
 	  },
 	  listenForClick: function () {
 	    this.map.addListener('click', (function (e) {
-	      debugger;
 	      this.props.handler({
 	        "lat": e.latLng.lat(),
 	        "lng": e.latLng.lng()
@@ -19775,14 +19786,15 @@
 /* 161 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var ApiActions = __webpack_require__(162);
+	var ApiActions = __webpack_require__(162),
+	    FilterActions = __webpack_require__(244);
 
 	var apiUtil = {
 	  fetchBenches: function (bounds) {
 	    $.ajax({
 	      method: 'GET',
 	      url: 'api/benches',
-	      data: { bounds: bounds },
+	      data: { params: bounds },
 	      dataType: 'json',
 	      success: function (resp) {
 	        ApiActions.receiveAll(resp);
@@ -19800,6 +19812,7 @@
 	      }
 	    });
 	  }
+
 	};
 
 	module.exports = apiUtil;
@@ -19808,8 +19821,8 @@
 /* 162 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var AppDispatcher = __webpack_require__(163);
-	var BenchConstants = __webpack_require__(167);
+	var AppDispatcher = __webpack_require__(163),
+	    BenchConstants = __webpack_require__(167);
 
 	var ApiActions = {
 	  receiveAll: function (benches) {
@@ -26624,7 +26637,6 @@
 
 	  componentDidMount: function () {
 	    var query = this.props.location.query;
-	    debugger;
 	    if (query) {
 	      this.setState({ "lat": query.lat, "lng": query.lng });
 	    }
@@ -26640,10 +26652,10 @@
 	      this.history.pushState(null, "/bench/" + id, {});
 	    }).bind(this));
 	    this.setState(this.blankAttrs);
+	    this.props.history.pushState(null, '/', {});
 	  },
 
 	  render: function () {
-	    debugger;
 	    return React.createElement(
 	      'form',
 	      { onSubmit: this.createBench },
@@ -31693,6 +31705,63 @@
 	};
 
 	module.exports = ReactStateSetters;
+
+/***/ },
+/* 242 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var Store = __webpack_require__(169).Store,
+	    AppDispatcher = __webpack_require__(163),
+	    FilterConstants = __webpack_require__(243),
+	    _params = {},
+	    FilterStore = new Store(AppDispatcher);
+
+	FilterStore.all = function () {
+	  return _params;
+	};
+
+	FilterStore.__onDispatch = function (payload) {
+	  switch (payload.actionType) {
+	    case FilterConstants.FILTERS_RECEIVED:
+	      this.resetFilters(payload.params);
+	      break;
+	  }
+	};
+
+	FilterStore._resetBenches = function (filters) {
+	  _params = params;
+	  this.__emitChange();
+	};
+
+	module.exports = FilterStore;
+
+/***/ },
+/* 243 */
+/***/ function(module, exports) {
+
+	var FilterConstants = {
+	  FILTERS_RECEIVED: 'FILTERS_RECEIVED'
+	};
+
+	module.exports = FilterConstants;
+
+/***/ },
+/* 244 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var AppDispatcher = __webpack_require__(163),
+	    FilterConstants = __webpack_require__(243);
+
+	var FilterActions = {
+	  receiveFilter: function (params) {
+	    AppDispatcher.dispatch({
+	      actionType: FilterConstants.FILTERS_RECEIVED,
+	      params: params
+	    });
+	  }
+	};
+
+	module.exports = FilterActions;
 
 /***/ }
 /******/ ]);
